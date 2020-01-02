@@ -1,5 +1,6 @@
 from PIL import Image
 import random
+import itertools
 
 class ImageFile():
     def __init__(self, filePath, fileName):
@@ -10,23 +11,23 @@ class ImageFile():
         self._EOT_CODE='00000100'
         self._NUL_CODE='11111111'
         self.pix=self._file.load()
-        self.avalSpace=(self._file.size[0]*(self._file.size[1]))/8
+        self.avalSpace=(self._file.size[0]*self._file.size[1])/8
+        self.Xindex=[x for x in range(0,self._file.size[0])]
+        self.Yindex=[x for x in range(0,self._file.size[1])]
 
     def __del__(self):
         self._file.close()
 
-    def BinaryDecrypt(self, keyX, keyY):
-        Xindex=[x for x in range(0,self._file.size[0])]
-        Yindex=[x for x in range(0,self._file.size[1])]
-        random.Random(keyX).shuffle(Xindex)
-        random.Random(keyY).shuffle(Yindex)
+    def BinaryDecrypt(self, key):
+        points=list(itertools.product(self.Xindex, self.Yindex))
+        random.Random(key).shuffle(points)
         state=True
         result=[]
         decode=""
         i=0
         while(True):
-            decode+=str(self.pix[Xindex[i],Yindex[i]][3]-254)
-            print(decode)
+            point=points[i]
+            decode+=str(self.pix[point[0],point[1]][3]-254)
             if len(decode)==8:
                 if decode==self._EOT_CODE:
                     break
@@ -39,17 +40,15 @@ class ImageFile():
             i+=1
         return state, result
 
-
-    def BinaryEncrypt(self, binary, keyX, keyY):
-        Xindex=[x for x in range(0,self._file.size[0])]
-        Yindex=[x for x in range(0,self._file.size[1])]
-        random.Random(keyX).shuffle(Xindex)
-        random.Random(keyY).shuffle(Yindex)
+    def BinaryEncrypt(self, binary, key):
+        points=list(itertools.product(self.Xindex, self.Yindex))
+        random.Random(key).shuffle(points)
         binary=binary+self._EOT_CODE
         for i,b in enumerate(binary):
-            pixel=self.pix[Xindex[i],Yindex[i]]
+            point=points[i]
+            pixel=self.pix[point[0],point[1]]
             if b=='0':
-                self.pix[Xindex[i],Yindex[i]]=(pixel[0], pixel[1], pixel[2], 254)
+                self.pix[point[0],point[1]]=(pixel[0], pixel[1], pixel[2], 254)
             else:
-                self.pix[Xindex[i],Yindex[i]]=(pixel[0], pixel[1], pixel[2], 255)
+                self.pix[point[0],point[1]]=(pixel[0], pixel[1], pixel[2], 255)
         self._file.save("./"+self._fileName+"_encrypt.png")

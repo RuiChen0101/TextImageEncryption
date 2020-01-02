@@ -40,10 +40,8 @@ class AppWindow(QMainWindow):
         key=self.ui._password.text()
         if message!='' and key!='':
             bin = self.string2bin(message)
-            print(bin)
-            print(len(bin))
-            keyX, keyY=self.GetKey(key)
-            self._image.BinaryEncrypt(bin, keyX, keyY)
+            key=self.GetKey(key)
+            self._image.BinaryEncrypt(bin, key)
             self.EncryptSuccess()
         else:
             self.ui._message.setText("content or password is empty")
@@ -51,8 +49,8 @@ class AppWindow(QMainWindow):
     def StartDecrypt(self):
         key=self.ui._password.text()
         if key!='':
-            keyX, keyY=self.GetKey(key)
-            stateCode, bin=self._image.BinaryDecrypt(keyX, keyY)
+            key=self.GetKey(key)
+            stateCode, bin=self._image.BinaryDecrypt(key)
             if(stateCode):
                 decodeString=self.bin2string(bin)
                 self.ui._content.setText(decodeString)
@@ -87,12 +85,7 @@ class AppWindow(QMainWindow):
         return ''.join([chr(int(x, 2)) for x in binary])
 
     def GetKey(self, key):
-        split = [char for char in key]
-        kx=split[0::2]
-        ky=split[1::2]
-        kx=''.join(i for i in kx)
-        ky=''.join(i for i in ky)
-        return hashlib.sha1(kx.encode('utf-8')).digest(), hashlib.sha1(ky.encode('utf-8')).digest()
+        return hashlib.sha1(key.encode('utf-8')).digest()
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
