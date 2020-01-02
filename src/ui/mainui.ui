@@ -38,7 +38,7 @@
     <property name="font">
      <font>
       <family>微軟正黑體</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -57,14 +57,14 @@
     <property name="font">
      <font>
       <family>微軟正黑體</family>
-      <pointsize>20</pointsize>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="_password">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -133,7 +133,7 @@
      <string>解密</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="_content">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -174,7 +174,7 @@
     <property name="font">
      <font>
       <family>微軟正黑體</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
